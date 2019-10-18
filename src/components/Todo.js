@@ -8,10 +8,10 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import "./Todo.css";
 
-function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo }) {
+function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo,checked }) {
   const [isEditing, toggle] = useToggle(false);
-
   return (
     <ListItem style={{height: '64px'}}>
       {isEditing ? (
@@ -23,6 +23,7 @@ function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo }) {
         />
       ) : (
         <>
+         {!checked ? 
           <Checkbox
             tabIndex={-1}
             checked={completed}
@@ -30,11 +31,13 @@ function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo }) {
               toggleTodo(id);
             }}
           />
+        : null}
           <ListItemText
             style={{ textDecoration: completed ? "line-through" : "" }}
           >
             {task}
           </ListItemText>
+          <div className='icons'>
           <ListItemSecondaryAction>
             <IconButton
               aria-label="Delete"
@@ -48,6 +51,7 @@ function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo }) {
               <EditIcon />
             </IconButton>
           </ListItemSecondaryAction>
+          </div>
         </>
       )}
     </ListItem>

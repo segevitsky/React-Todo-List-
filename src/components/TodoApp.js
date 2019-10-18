@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import useTodoState from '../hooks/useTodoState';
+import React, { useState,useEffect } from "react";
+import useTodoState from "../hooks/useTodoState";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
 import Typography from "@material-ui/core/Typography";
@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
+import Switch from "@material-ui/core/Switch";
 
 const style = {
   padding: 0,
@@ -15,17 +16,24 @@ const style = {
   backgroundColor: "#fafafa"
 };
 
-
-
 function TodoApp() {
-  const initTodos = JSON.parse(window.localStorage.getItem('todos') || '[]')
-  const {todos,addTodo, removeTodo, toggleTodo,editTodo} = useTodoState(initTodos);
+  const initTodos = JSON.parse(window.localStorage.getItem("todos") || "[]");
+  const { todos, addTodo, removeTodo, toggleTodo, editTodo } = useTodoState(
+    initTodos
+  );
+  const [checked, setChecked] = useState({
+    checkedA: false,
+  });
 
   useEffect(() => {
-    window.localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]) 
-  //this [todos] array is not necasery here but it is best practice so it wouldnt rerender for each piece of state
+    window.localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+  //this [todos] array is not necasery here but its best practice so it wouldnt rerender for each piece of state
 
+
+  const handleChange = name => event => {
+    setChecked({ ...checked, [name]: event.target.checked });
+  };
 
   return (
     <Paper style={style} elevation={0}>
@@ -36,12 +44,20 @@ function TodoApp() {
       </AppBar>
       <Grid container justify="center" style={{ marginTop: "3rem" }}>
         <Grid item xs={11} md={8} lg={4}>
+          <Switch
+            checked={checked.checkedA}
+            onChange={(handleChange("checkedA"))}
+            value="checkedA"
+            inputProps={{ "aria-label": "secondary checkbox" }}
+          />
           <TodoForm addTodo={addTodo} />
           <TodoList
             todos={todos}
+            checked={checked.checkedA}
             removeTodo={removeTodo}
             toggleTodo={toggleTodo}
             editTodo={editTodo}
+            
           />
         </Grid>
       </Grid>
@@ -50,5 +66,3 @@ function TodoApp() {
 }
 
 export default TodoApp;
-
-
