@@ -9,3 +9,6 @@
     window.localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]) 
   //this [todos] array is not necasery here but it is best practice so it wouldnt rerender for each piece of state
+
+
+  

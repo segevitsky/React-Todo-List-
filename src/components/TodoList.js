@@ -4,28 +4,78 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import Todo from "./Todo";
 import "./TodoList.css";
+import RootRef from "@material-ui/core/RootRef";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-function TodoList({ todos, removeTodo, toggleTodo, editTodo, checked }) {
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // styles we need to apply on draggables
+  ...draggableStyle,
+
+  ...(isDragging && {
+    background: "rgb(235,235,235)"
+  })
+});
+
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey"
+});
+
+function TodoList({
+  todos,
+  removeTodo,
+  toggleTodo,
+  editTodo,
+  checked,
+  onDrag
+}) {
   if (todos.length)
     return (
       <Paper>
-        <List className={checked ? "container" : null}>
-          {todos.map((todo, i) => (
-            <>
-              <div className={checked ? "card" : null}>
-                <Todo
-                  {...todo}
-                  key={todo.id}
-                  removeTodo={removeTodo}
-                  toggleTodo={toggleTodo}
-                  editTodo={editTodo}
-                  checked={checked}
-                />
-              </div>
-              {i < todos.length - 1 && <Divider />}
-            </>
-          ))}
-        </List>
+        <DragDropContext onDragEnd={onDrag}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <RootRef rootRef={provided.innerRef}>
+                <List style={getListStyle(snapshot.isDraggingOver)} className={checked ? "container" : null}>
+                  {todos.map((todo, i) => (
+                    <Draggable
+                      key={todo.id}
+                      draggableId={todo.id}
+                      index={i}
+                    >
+                      {(provided, snapshot) => (
+                        <>
+                          <div className={checked ? "card" : null}>
+                            <Todo
+                              {...todo}
+                              key={todo.id}
+                              ContainerComponent="todo"
+                              innerRef={provided.innerRef}
+                              provided={provided}
+                              // {...provided.draggableProps}
+                              // {...provided.dragHandleProps}
+                              removeTodo={removeTodo}
+                              toggleTodo={toggleTodo}
+                              editTodo={editTodo}
+                              checked={checked}
+                              onDrag={onDrag}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                            />
+                          </div>
+                          {i < todos.length - 1 && <Divider />}
+                        </>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </List>
+              </RootRef>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Paper>
     );
   return null;

@@ -1,4 +1,5 @@
-import React, { useState,useEffect } from "react";
+import React, {useState} from "react";
+import useLocalStorageState from "../hooks/useLocalStorageState";
 import useTodoState from "../hooks/useTodoState";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
@@ -16,20 +17,39 @@ const style = {
   backgroundColor: "#fafafa"
 };
 
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 function TodoApp() {
-  const initTodos = JSON.parse(window.localStorage.getItem("todos") || "[]");
+  const initTodos = [{ id: 1, task: "Finish todo list app", completed: false }];
   const { todos, addTodo, removeTodo, toggleTodo, editTodo } = useTodoState(
     initTodos
   );
-  const [checked, setChecked] = useState({
-    checkedA: false,
-  });
+  const [checked, setChecked] = useLocalStorageState("checked", false);
+  const [state, setState] = useState({ quotes: initTodos });
 
-  useEffect(() => {
-    window.localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
-  //this [todos] array is not necasery here but its best practice so it wouldnt rerender for each piece of state
+  const onDragEnd = result => {
+    if (!result.destination) {
+      return;
+    }
 
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const quotes = reorder(
+      state.quotes,
+      result.source.index,
+      result.destination.index
+    );
+
+    setState({ quotes });
+  }
 
   const handleChange = name => event => {
     setChecked({ ...checked, [name]: event.target.checked });
@@ -45,9 +65,9 @@ function TodoApp() {
       <Grid container justify="center" style={{ marginTop: "1.5rem" }}>
         <Grid item xs={11} md={8} lg={4}>
           <Switch
-            edge='end'
+            edge="end"
             checked={checked.checkedA}
-            onChange={(handleChange("checkedA"))}
+            onChange={handleChange("checkedA")}
             value="checkedA"
             inputProps={{ "aria-label": "secondary checkbox" }}
           />
@@ -58,7 +78,7 @@ function TodoApp() {
             removeTodo={removeTodo}
             toggleTodo={toggleTodo}
             editTodo={editTodo}
-            
+            onDrag={onDragEnd}
           />
         </Grid>
       </Grid>

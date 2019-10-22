@@ -10,10 +10,25 @@ import EditIcon from "@material-ui/icons/Edit";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import "./Todo.css";
 
-function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo,checked }) {
+function Todo({
+  id,
+  task,
+  completed,
+  removeTodo,
+  toggleTodo,
+  editTodo,
+  checked,
+  provided,
+  innerRef
+}) {
   const [isEditing, toggle] = useToggle(false);
   return (
-    <ListItem style={{height: '64px'}}>
+    <ListItem
+      style={{ height: "64px" }}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      ref={innerRef}
+    >
       {isEditing ? (
         <EditTodoForm
           editTodo={editTodo}
@@ -23,34 +38,34 @@ function Todo({ id, task, completed, removeTodo, toggleTodo, editTodo,checked })
         />
       ) : (
         <>
-         {!checked ? 
-          <Checkbox
-            tabIndex={-1}
-            checked={completed}
-            onClick={() => {
-              toggleTodo(id);
-            }}
-          />
-        : null}
+          {!checked ? (
+            <Checkbox
+              tabIndex={-1}
+              checked={completed}
+              onClick={() => {
+                toggleTodo(id);
+              }}
+            />
+          ) : null}
           <ListItemText
             style={{ textDecoration: completed ? "line-through" : "" }}
           >
             {task}
           </ListItemText>
-          <div className='icons'>
-          <ListItemSecondaryAction>
-            <IconButton
-              aria-label="Delete"
-              onClick={() => {
-                removeTodo(id);
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-            <IconButton aria-label="Edit" onClick={toggle}>
-              <EditIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
+          <div className="icons">
+            <ListItemSecondaryAction>
+              <IconButton
+                aria-label="Delete"
+                onClick={() => {
+                  removeTodo(id);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+              <IconButton aria-label="Edit" onClick={toggle}>
+                <EditIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
           </div>
         </>
       )}
