@@ -42,9 +42,10 @@ function TodoApp() {
           <Typography color="inherit">My Todo List</Typography>
         </Toolbar>
       </AppBar>
-      <Grid container justify="center" style={{ marginTop: "3rem" }}>
+      <Grid container justify="center" style={{ marginTop: "1.5rem" }}>
         <Grid item xs={11} md={8} lg={4}>
           <Switch
+            edge='end'
             checked={checked.checkedA}
             onChange={(handleChange("checkedA"))}
             value="checkedA"
