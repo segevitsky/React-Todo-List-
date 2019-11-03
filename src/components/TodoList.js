@@ -18,17 +18,19 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey"
+  background: isDraggingOver ? "#e4d1d1" : "white"
 });
 
 function TodoList({
   todos,
+  quotes,
   removeTodo,
   toggleTodo,
   editTodo,
   checked,
-  onDrag
+  onDrag,
 }) {
+  console.log(quotes)
   if (todos.length)
     return (
       <Paper>
@@ -52,8 +54,6 @@ function TodoList({
                               ContainerComponent="todo"
                               innerRef={provided.innerRef}
                               provided={provided}
-                              // {...provided.draggableProps}
-                              // {...provided.dragHandleProps}
                               removeTodo={removeTodo}
                               toggleTodo={toggleTodo}
                               editTodo={editTodo}

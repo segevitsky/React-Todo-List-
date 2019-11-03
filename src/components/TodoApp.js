@@ -21,17 +21,24 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
+  // console.log({list});
   return result;
 };
 
 function TodoApp() {
-  const initTodos = [{ id: 1, task: "Finish todo list app", completed: false }];
+  const initTodos = [
+    { id: 1, task: "eat a monkey", completed: false },
+    { id: 2, task: "eat a monk", completed: false }
+  ];
   const { todos, addTodo, removeTodo, toggleTodo, editTodo } = useTodoState(
     initTodos
   );
+
   const [checked, setChecked] = useLocalStorageState("checked", false);
+  // const [state, setState] = useLocalStorageState("todos", initTodos);
   const [state, setState] = useState({ quotes: initTodos });
+
+  
 
   const onDragEnd = result => {
     if (!result.destination) {
@@ -43,13 +50,13 @@ function TodoApp() {
     }
 
     const quotes = reorder(
-      state.quotes,
+      state,
       result.source.index,
       result.destination.index
     );
-
+    console.log(result)
     setState({ quotes });
-  }
+  };
 
   const handleChange = name => event => {
     setChecked({ ...checked, [name]: event.target.checked });
@@ -62,7 +69,7 @@ function TodoApp() {
           <Typography color="inherit">My Todo List</Typography>
         </Toolbar>
       </AppBar>
-      <Grid container justify="center" style={{ marginTop: "1.5rem" }}>
+      <Grid container justify="center" style={{ marginTop: "1.0rem" }}>
         <Grid item xs={11} md={8} lg={4}>
           <Switch
             edge="end"
@@ -73,6 +80,7 @@ function TodoApp() {
           />
           <TodoForm addTodo={addTodo} />
           <TodoList
+            quotes={state}
             todos={todos}
             checked={checked.checkedA}
             removeTodo={removeTodo}
