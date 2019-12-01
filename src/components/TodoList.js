@@ -30,7 +30,7 @@ function TodoList({
   checked,
   onDrag,
 }) {
-  console.log(quotes)
+  console.log(todos)
   if (todos.length)
     return (
       <Paper>

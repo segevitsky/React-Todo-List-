@@ -36,9 +36,8 @@ function TodoApp() {
 
   const [checked, setChecked] = useLocalStorageState("checked", false);
   // const [state, setState] = useLocalStorageState("todos", initTodos);
-  const [state, setState] = useState({ quotes: initTodos });
+  const [state, setState] = useState({ initTodos });
 
-  
 
   const onDragEnd = result => {
     if (!result.destination) {
@@ -50,12 +49,12 @@ function TodoApp() {
     }
 
     const quotes = reorder(
-      state,
+      initTodos,
       result.source.index,
       result.destination.index
     );
-    console.log(result)
     setState({ quotes });
+    console.log(quotes)
   };
 
   const handleChange = name => event => {
@@ -80,7 +79,7 @@ function TodoApp() {
           />
           <TodoForm addTodo={addTodo} />
           <TodoList
-            quotes={state}
+            // quotes={state}
             todos={todos}
             checked={checked.checkedA}
             removeTodo={removeTodo}
